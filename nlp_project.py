@@ -51,3 +51,20 @@ print(sample_wos_df)
 
 print('\Web of Science dataset source format:')
 print(df_data_wos[['article', 'label']][x:x+5])
+
+import split
+
+# split the data into 80/20 train/test sets
+df_train_cb, df_test_cb = split.split_data(df_data_cb)
+df_train_wos, df_test_wos = split.split_data(df_data_wos)
+
+# separate the independent and dependent variables
+x_train_cb, y_train_cb = list(df_train_cb['headline']), list(df_train_cb['label'])
+x_test_cb, y_test_cb = list(df_test_cb['headline']), list(df_test_cb['label'])
+x_train_wos, y_train_wos = list(df_train_wos['article']), list(df_train_wos['label'])
+x_test_wos, y_test_wos = list(df_test_wos['article']), list(df_test_wos['label'])
+
+print(f'Clickbait dataset training headline count: {len(x_train_cb)}')
+print(f'Clickbait dataset test headline count: {len(x_test_cb)}')
+print(f'Web of Science training article count: {len(x_train_wos)}')
+print(f'Web of Science test article count: {len(x_test_wos)}')
