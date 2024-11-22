@@ -4,8 +4,8 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-nltk.download('punkt')
-nltk.download('stopwords')
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
 
 class Preprocess(object):
 	def __init__(self):
@@ -19,7 +19,7 @@ class Preprocess(object):
         	cleaned_text: string
         '''
 		# Remove HTML formatting
-		soup = BeautifulSoup(text)
+		soup = BeautifulSoup(text, 'html.parser')
 		cleaned_text = soup.get_text()
 
 		# Remove non-alphabet characters such as punctuation or numbers and replace with ' '
@@ -53,7 +53,6 @@ pp = Preprocess()
 
 def clean_wos(x_train, x_test):
 	'''
-	ToDo: Clean both the x_train and x_test dataset using clean_dataset from Preprocess
 	Input:
 		x_train: list of N strings
 		x_test: list of M strings
@@ -61,7 +60,7 @@ def clean_wos(x_train, x_test):
 		cleaned_text_wos_train: list of cleaned N strings
 		cleaned_text_wos_test: list of cleaned M strings
 	'''
-	cleaned_text_wos_train = pp.clean_dataset(x_train)
-	cleaned_text_wos_test = pp.clean_dataset(x_test)
+	cleaned_train_wos = pp.clean_dataset(x_train)
+	cleaned_test_wos = pp.clean_dataset(x_test)
 
-	return cleaned_text_wos_train, cleaned_text_wos_test
+	return cleaned_train_wos, cleaned_test_wos
