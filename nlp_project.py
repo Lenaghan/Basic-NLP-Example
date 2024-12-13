@@ -32,7 +32,7 @@ print(f'\nNumber of Web of Science Articles: {len(df_data_wos)}')
 # Numerical label to domain mapping
 wos_label = dict(zip(df_data_wos['Y1'], df_data_wos['Domain']))
 
-# Output labels as a table
+# Output domain labels as a table
 wos_label_df = pd.DataFrame(list(wos_label.items()),columns=['Label','Description'])
 print("\nKey:")
 print(wos_label_df)
@@ -77,3 +77,21 @@ cleaned_test_cb = Preprocess().clean_dataset(x_test_cb)
 # Clean the Web of Science articles
 from preprocess import clean_wos
 cleaned_train_wos, cleaned_test_wos = clean_wos(x_train_wos, x_test_wos)
+
+# Convert the Web of Science cleaned text to a Bag of Words representation
+from bagofwords import OHE_BOW
+ohe_bow = OHE_BOW()
+ohe_bow.fit(cleaned_train_wos)
+
+wos_train_ohe_bow = ohe_bow.transform(cleaned_train_wos)
+print('Bag of Words representation for training set on Web of Science data shape:', wos_train_ohe_bow.shape)
+wos_test_ohe_bow = ohe_bow.transform(cleaned_test_wos)
+print('Bag of Words representation for test set on Web of Science data shape:', wos_test_ohe_bow.shape)
+
+# Convert the Clickbait cleaned text to a Bag of Words representation
+ohe_bow.fit(cleaned_train_cb)
+
+cb_train_ohe_bow = ohe_bow.transform(cleaned_train_cb)
+print('Bag of Words representation for training set on Clickbait data shape:', cb_train_ohe_bow.shape)
+cb_test_ohe_bow = ohe_bow.transform(cleaned_test_cb)
+print('Bag of Words representation for test set on Clickbait data shape:', cb_test_ohe_bow.shape)
