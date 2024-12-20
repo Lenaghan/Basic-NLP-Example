@@ -1,11 +1,10 @@
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
+import time
 
 class OHE_BOW(object): 
 	def __init__(self):
-		'''
-		Initializes instance of OneHotEncoder in self.oh for use in fit and transform
-		'''
+		# initialize instance of OneHotEncoder in self.oh for use in fit and transform
 		self.vocab_size = None
 		self.oh = OneHotEncoder()
 
@@ -14,7 +13,6 @@ class OHE_BOW(object):
 		Separates each string into a list of individual words
 		Args:
 			data: list of N strings
-		
 		Return:
 			data_split: list of N lists of individual words from each string
 		'''
@@ -26,10 +24,9 @@ class OHE_BOW(object):
 		Flattens a list of list of words into a single list
 		Args:
 			data: list of N lists of W_i words 
-		
 		Return:
 			data_split: (W,) numpy array of words, where W is the sum of the number of W_i words
-			in each of the list of words		
+			in each of the list of words
 		'''
 		data_split = [i for items in data for i in items]
 		return data_split
@@ -51,39 +48,39 @@ class OHE_BOW(object):
 		Encodes a list of words into one hot encoding format
 		Args:
 			words: list of W_i words from a string
-		
 		Return:
 			onehotencoded: (W_i, D) numpy array where:
 				W_i is the number of words in the current input list i
 				D is the vocab size
 		'''
-		text = np.array(words)
-		onehotencoded = self.oh.transform(text.reshape(-1, 1)).toarray()
+		words = np.array(words).reshape(-1, 1)
+		onehotencoded = self.oh.transform(words).toarray()
 		return onehotencoded
 
-	def oneHotEncoding(self, row):
-		try:
-			return self.onehot(row).sum(axis=0)
-		except:
-			return np.zeros(self.vocab_size)    
-
-	def transform(self, data):
+	def bow_transform(self, data, batch_size=1000):
 		'''
-		Uses the already fitted instance of OneHotEncoder to transform the given 
-		data into a bag of words representation.
+		Transform the given data into a bag of words representation.
 		Args:
 			data: list of N strings
-		
+			batch_size: int, size of each batch for processing
 		Return:
 			bow: (N, D) numpy array
 		'''
 		bow = []
-		data = self.split_text(data)
-		for i in data:
-			try:
-				one_bow = self.onehot(i).sum(axis=0)
-			except: one_bow = np.zeros(self.vocab_size)
-			bow.append(one_bow)
+
+		for i in range(0, len(data), batch_size):
+			start_time = time.time() # track compute time
+			batch = data[i:i + batch_size]
+			string_list = self.split_text(batch) # separate the strings into lists of words
+
+			for word_list in string_list:
+				try: # check for empty strings
+					one_bow = self.onehot(word_list).sum(axis=0) # transform into bag of words
+				except: one_bow = np.zeros(self.vocab_size) # append array of zeros if empty
+				bow.append(one_bow)
+		compute_time = time.time() - start_time
+		print(f'Batch completed for items {i} through {i + batch_size}')
+		print(f"Time to encode this batch: {compute_time:.2f} seconds")
 
 		bow = np.array(bow)
 		return bow
