@@ -78,9 +78,9 @@ class OHE_BOW(object):
 					one_bow = self.onehot(word_list).sum(axis=0) # transform into bag of words
 				except: one_bow = np.zeros(self.vocab_size) # append array of zeros if empty
 				bow.append(one_bow)
-		compute_time = time.time() - start_time
-		print(f'Batch completed for items {i} through {i + batch_size}')
-		print(f"Time to encode this batch: {compute_time:.2f} seconds")
-
+			compute_time = time.time() - start_time
+			print(f"Time to encode this batch: {compute_time:.2f} seconds")
+			print(f'Batch completed for items {i} through {i + batch_size}')
+		
 		bow = np.array(bow)
 		return bow
