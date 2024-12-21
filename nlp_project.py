@@ -75,7 +75,7 @@ from preprocess import Preprocess
 cleaned_train_cb = Preprocess().clean_dataset(x_train_cb)
 cleaned_test_cb = Preprocess().clean_dataset(x_test_cb)
 compute_time = time.time() - start_time
-print(f"Time to clean Clickbait dataset: {compute_time:.2f} seconds")
+print(f"\nTime to clean Clickbait dataset: {compute_time:.2f} seconds")
 
 # Clean the Web of Science articles
 start_time = time.time() # track compute time

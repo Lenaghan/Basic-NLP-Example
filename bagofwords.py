@@ -62,25 +62,23 @@ class OHE_BOW(object):
 		Transform the given data into a bag of words representation.
 		Args:
 			data: list of N strings
+			output_file: path to save the bow array
 			batch_size: int, size of each batch for processing
 		Return:
 			bow: (N, D) numpy array
-		'''
-		bow = []
-
+		'''	
 		for i in range(0, len(data), batch_size):
-			start_time = time.time() # track compute time
 			batch = data[i:i + batch_size]
 			string_list = self.split_text(batch) # separate the strings into lists of words
+			batch_bow = []
 
 			for word_list in string_list:
 				try: # check for empty strings
 					one_bow = self.onehot(word_list).sum(axis=0) # transform into bag of words
 				except: one_bow = np.zeros(self.vocab_size) # append array of zeros if empty
-				bow.append(one_bow)
-			compute_time = time.time() - start_time
-			print(f"Time to encode this batch: {compute_time:.2f} seconds")
+				batch_bow.extend(one_bow)
+
 			print(f'Batch completed for items {i} through {i + batch_size}')
 		
-		bow = np.array(bow)
+		bow = np.array(batch_bow)
 		return bow
