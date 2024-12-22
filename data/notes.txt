@@ -2,14 +2,20 @@ Number of headlines in Clickbait dataset: 31845
 Clickbait dataset training headline count: 25476
 Clickbait dataset test headline count: 6369
 Time to clean Clickbait dataset: 15.19 seconds
-Time to encode cleaned Clickbait dataset: 1586.82 seconds (26.447 min)
+
 Bag of Words representation for training set on Clickbait data shape: (476, 20533)
 Bag of Words representation for test set on Clickbait data shape: (369, 20533)
+Time to encode cleaned Clickbait dataset: 1586.82 seconds (26.447 min)
 
+Bag of Words representation for training set on Clickbait data shape: (476, 20536)
+Bag of Words representation for test set on Clickbait data shape: (1369, 20536)
+Time to encode cleaned Clickbait dataset: 1732.19 seconds
+----------------------------------------------------------------------------------------
 Number of Web of Science Articles: 46985
 Web of Science training article count: 37588
 Web of Science test article count: 9397
 Time to clean Web of Science dataset: 53.81 seconds
-Time to encode cleaned Web of Science dataset: 12899.52 seconds (3 hrs, 34.992 min)
+
 Bag of Words representation for training set on Web of Science data shape: (588, 97205)
 Bag of Words representation for test set on Web of Science data shape: (397, 97205)
+Time to encode cleaned Web of Science dataset: 12899.52 seconds (3 hrs, 34.992 min)
