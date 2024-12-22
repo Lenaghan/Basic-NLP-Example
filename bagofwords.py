@@ -66,7 +66,7 @@ class OHE_BOW(object):
 		Return:
 			bow: (N, D) numpy array
 		'''	
-		for i in range(0, len(data), batch_size=5000):
+		for i in range(0, len(data), batch_size):
 			batch = data[i:i + batch_size]
 			string_list = self.split_text(batch) # separate the strings into lists of words
 			batch_bow = []
