@@ -13,45 +13,34 @@ print('python: {}'.format(sys.version))
 print('numpy: {}'.format(np.__version__))
 
 # Load the datasets
-df_data_cb = pd.read_csv('./data/data_cb.csv')
-df_data_wos = pd.read_csv('./data/web_of_science_data.csv') #('./data/data_wos.csv')
+df_data_cb = pd.read_csv('./data/clickbait_data.csv')
+df_data_wos = pd.read_csv('./data/web_of_science_data.csv')
 
 # Preview the Clickbait data
 print(f'\nNumber of headlines in Clickbait dataset: {len(df_data_cb)}')
-print('\nSample:')
 x = 42
-sample_cb_data = df_data_cb.iloc[x:x+5]
-for _, row in sample_cb_data.iterrows():
-    print(f"{row['label']}: {row['headline']}", end="")
-    
-print('\nClickbait dataset source format:')
-print(df_data_cb[['headline', 'label']][x:x+5])
+print('Source preview:')
+print(df_data_cb[x:x+5])
 
 # Preview the Web of Science data
 print(f'\nNumber of Web of Science Articles: {len(df_data_wos)}')
 
+#from preprocess import process_key_column
+df_data_wos['Domain'] = df_data_wos['Domain'].str.strip()
+df_data_wos['Domain'] = df_data_wos['Domain'].str[0].str.upper() + df_data_wos['Domain'].str[1:]
+
 # Numerical label to domain mapping
 wos_label = dict(zip(df_data_wos['Y1'], df_data_wos['Domain']))
+
+# Output sample labels and articles
+x=17
+print('Source preview:')
+print(df_data_wos[x:x+5])
 
 # Output domain labels as a table
 wos_label_df = pd.DataFrame(list(wos_label.items()),columns=['Label','Description'])
 print("\nKey:")
 print(wos_label_df)
-
-# Output sample labels and articles
-print("\nSample:")
-x=17
-sample_wos_data = {
-    'Label': df_data_wos['Y1'][x:x+5],
-    'Description': [wos_label.get(label.strip(), label) for label in df_data_wos['Domain'][x:x+5]],
-    'Article': df_data_wos['Abstract'][x:x+5]
-}
-
-sample_wos_df = pd.DataFrame(sample_wos_data)
-print(sample_wos_df)
-
-print('\nWeb of Science dataset source format:')
-print(df_data_wos[x:x+5])
 
 # split the data into 80/20 train/test sets
 import split
@@ -82,23 +71,11 @@ start_time = time.time() # track compute time
 from preprocess import clean_wos
 cleaned_train_wos, cleaned_test_wos = clean_wos(x_train_wos, x_test_wos)
 compute_time = time.time() - start_time
-print(f"Time to clean Web of Science dataset: {compute_time:.2f} seconds")
-
-# Convert the Web of Science cleaned text to a Bag of Words representation
-from bagofwords import OHE_BOW
-ohe_bow = OHE_BOW()
-
-start_time = time.time() # track compute time
-ohe_bow.fit(cleaned_train_wos)
-
-wos_train_ohe_bow = ohe_bow.bow_transform(cleaned_train_wos)
-print('Bag of Words representation for training set on Web of Science data shape:', wos_train_ohe_bow.shape)
-wos_test_ohe_bow = ohe_bow.bow_transform(cleaned_test_wos)
-print('Bag of Words representation for test set on Web of Science data shape:', wos_test_ohe_bow.shape)
-compute_time = time.time() - start_time
-print(f"Time to encode cleaned Web of Science dataset: {compute_time:.2f} seconds")
+print(f"Time to clean Web of Science dataset: {compute_time:.2f} seconds\n")
 
 # Convert the Clickbait cleaned text to a Bag of Words representation
+from bagofwords import OHE_BOW
+ohe_bow = OHE_BOW()
 start_time = time.time() # track compute time
 ohe_bow.fit(cleaned_train_cb)
 
@@ -106,5 +83,16 @@ cb_train_ohe_bow = ohe_bow.bow_transform(cleaned_train_cb)
 print('Bag of Words representation for training set on Clickbait data shape:', cb_train_ohe_bow.shape)
 cb_test_ohe_bow = ohe_bow.bow_transform(cleaned_test_cb)
 print('Bag of Words representation for test set on Clickbait data shape:', cb_test_ohe_bow.shape)
+compute_time = time.time() - start_time
+print(f"Time to encode cleaned Clickbait dataset: {compute_time:.2f} seconds")
+
+# Convert the Web of Science cleaned text to a Bag of Words representation
+start_time = time.time() # track compute time
+ohe_bow.fit(cleaned_train_wos)
+
+wos_train_ohe_bow = ohe_bow.bow_transform(cleaned_train_wos)
+print('Bag of Words representation for training set on Web of Science data shape:', wos_train_ohe_bow.shape)
+wos_test_ohe_bow = ohe_bow.bow_transform(cleaned_test_wos)
+print('Bag of Words representation for test set on Web of Science data shape:', wos_test_ohe_bow.shape)
 compute_time = time.time() - start_time
 print(f"Time to encode cleaned Web of Science dataset: {compute_time:.2f} seconds")

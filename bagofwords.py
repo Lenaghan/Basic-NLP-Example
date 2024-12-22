@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
-import time
 
 class OHE_BOW(object): 
 	def __init__(self):
@@ -57,7 +56,7 @@ class OHE_BOW(object):
 		onehotencoded = self.oh.transform(words).toarray()
 		return onehotencoded
 
-	def bow_transform(self, data, batch_size=1000):
+	def bow_transform(self, data, batch_size=5000):
 		'''
 		Transform the given data into a bag of words representation.
 		Args:
@@ -67,7 +66,7 @@ class OHE_BOW(object):
 		Return:
 			bow: (N, D) numpy array
 		'''	
-		for i in range(0, len(data), batch_size):
+		for i in range(0, len(data), batch_size=5000):
 			batch = data[i:i + batch_size]
 			string_list = self.split_text(batch) # separate the strings into lists of words
 			batch_bow = []
@@ -76,7 +75,7 @@ class OHE_BOW(object):
 				try: # check for empty strings
 					one_bow = self.onehot(word_list).sum(axis=0) # transform into bag of words
 				except: one_bow = np.zeros(self.vocab_size) # append array of zeros if empty
-				batch_bow.extend(one_bow)
+				batch_bow.append(one_bow)
 
 			print(f'Batch completed for items {i} through {i + batch_size}')
 		

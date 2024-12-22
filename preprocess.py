@@ -1,11 +1,15 @@
 import re
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import warnings
 
 nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
+
+# Suppress the MarkupResemblesLocatorWarning
+warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
 
 class Preprocess(object):
 	def __init__(self):
