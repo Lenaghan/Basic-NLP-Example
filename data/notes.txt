@@ -19,3 +19,8 @@ Time to clean Web of Science dataset: 53.81 seconds
 Bag of Words representation for training set on Web of Science data shape: (588, 97205)
 Bag of Words representation for test set on Web of Science data shape: (397, 97205)
 Time to encode cleaned Web of Science dataset: 12899.52 seconds (3 hrs, 34.992 min)
+----------------------------------------------------------------------------------------
+Bag of Words representation for training set on Clickbait data shape: (25476, 20517)
+Bag of Words representation for test set on Clickbait data shape: (6369, 20517)
+Time to encode Clickbait data using CountVectorizer: 0.42 seconds
+

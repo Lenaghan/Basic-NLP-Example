@@ -73,7 +73,7 @@ cleaned_train_wos, cleaned_test_wos = clean_wos(x_train_wos, x_test_wos)
 compute_time = time.time() - start_time
 print(f"Time to clean Web of Science dataset: {compute_time:.2f} seconds\n")
 
-# compare OHE_BOW compute time and output shapes
+# compare compute time and output shapes using OneHotEncoder
 from bagofwords import OHE_BOW
 ohe_bow = OHE_BOW()
 
@@ -84,9 +84,9 @@ cb_train_ohe_bow = ohe_bow.bow_transform(cleaned_train_cb)
 cb_test_ohe_bow = ohe_bow.bow_transform(cleaned_test_cb)
 compute_time = time.time() - start_time
 
-print('Bag of Words representation for training set on Clickbait data shape:', cb_train_ohe_bow.shape)
-print('Bag of Words representation for test set on Clickbait data shape:', cb_test_ohe_bow.shape)
-print(f"Time to encode cleaned Clickbait dataset: {compute_time:.2f} seconds")
+print('Clickbait(train) OneHotEncoder Bag of Words representation shape:', cb_train_ohe_bow.shape)
+print('Clickbait(test) OneHotEncoder Bag of Words representation shape:', cb_test_ohe_bow.shape)
+print(f"Time to encode cleaned Clickbait dataset: {compute_time:.2f} seconds\n")
 
 # Convert the Web of Science cleaned text to a Bag of Words representation
 start_time = time.time() # track compute time
@@ -95,30 +95,27 @@ wos_train_ohe_bow = ohe_bow.bow_transform(cleaned_train_wos)
 wos_test_ohe_bow = ohe_bow.bow_transform(cleaned_test_wos)
 compute_time = time.time() - start_time
 
-print('Bag of Words representation for test set on Web of Science data shape:', wos_test_ohe_bow.shape)
-print('Bag of Words representation for training set on Web of Science data shape:', wos_train_ohe_bow.shape)
-print(f"Time to encode cleaned Web of Science dataset: {compute_time:.2f} seconds")
+print('Web of Science(train) OneHotEncoder Bag of Words representation shape:', wos_train_ohe_bow.shape)
+print('Web of Science(test) OneHotEncoder Bag of Words representation shape:', wos_test_ohe_bow.shape)
+print(f"Time to encode cleaned Web of Science dataset: {compute_time:.2f} seconds\n")
 
-# compare CountVectorizer compute time and output shapes
-from sklearn.feature_extraction.text import CountVectorizer
-vectorizer = CountVectorizer()
-
+# compare compute time and output shapes using CountVectorizer
 # Convert the Clickbait cleaned text to a Bag of Words representation
 start_time = time.time() # track compute time
-cb_train_cv_bow = vectorizer.fit_transform(cleaned_train_cb).toarray()
-cb_test_cv_bow = vectorizer.transform(cleaned_test_cb).toarray()
+cb_train_cv_bow = ohe_bow.cv_bow_transform(cleaned_train_cb, fit=True)
+cb_test_cv_bow = ohe_bow.cv_bow_transform(cleaned_test_cb, fit=False)
 compute_time = time.time() - start_time
 
-print('Bag of Words representation for training set on Clickbait data shape:', cb_train_cv_bow.shape)
-print('Bag of Words representation for test set on Clickbait data shape:', cb_test_cv_bow.shape)
-print(f"Time to encode Clickbait data using CountVectorizer: {compute_time:.2f} seconds")
+print('Clickbait(train) CountVectorizer Bag of Words representation shape:', cb_train_cv_bow.shape)
+print('Clickbait(test) CountVectorizer Bag of Words representation shape:', cb_test_cv_bow.shape)
+print(f"Time to encode Clickbait data using CountVectorizer: {compute_time:.2f} seconds\n")
 
 # Convert the Web of Science cleaned text to a Bag of Words representation
 start_time = time.time() # track compute time
-wos_train_cv_bow = vectorizer.fit_transform(cleaned_train_wos).toarray()
-wos_test_cv_bow = vectorizer.transform(cleaned_test_wos).toarray()
+wos_train_cv_bow = ohe_bow.cv_bow_transform(cleaned_train_wos, fit=True)
+wos_test_cv_bow = ohe_bow.cv_bow_transform(cleaned_test_wos, fit=False)
 compute_time = time.time() - start_time
 
-print('Bag of Words representation for training set on Web of Science data shape:', wos_train_cv_bow.shape)
-print('Bag of Words representation for test set on Web of Science data shape:', wos_test_cv_bow.shape)
-print(f"Time to encode Web of Science data using CountVectorizer: {compute_time:.2f} seconds")
+print('Web of Science(train) CountVectorizer Bag of Words representation shape:', wos_train_cv_bow.shape)
+print('Web of Science(test) CountVectorizer Bag of Words representation shape:', wos_test_cv_bow.shape)
+print(f"Time to encode Web of Science data using CountVectorizer: {compute_time:.2f} seconds\n")

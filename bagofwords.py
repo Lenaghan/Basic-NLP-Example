@@ -1,11 +1,14 @@
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.feature_extraction.text import CountVectorizer
+from scipy.sparse import vstack, csr_matrix
 
 class OHE_BOW(object): 
 	def __init__(self):
 		# initialize instance of OneHotEncoder in self.oh for use in fit and transform
 		self.vocab_size = None
 		self.oh = OneHotEncoder()
+		self.cv = CountVectorizer()
 
 	def split_text(self, data):
 		'''
@@ -56,28 +59,50 @@ class OHE_BOW(object):
 		onehotencoded = self.oh.transform(words).toarray()
 		return onehotencoded
 
-	def bow_transform(self, data, batch_size=5000):
+	# process data in batches using OneHotEncoder
+	def bow_transform(self, data, batch_size=10):
 		'''
-		Transform the given data into a bag of words representation.
+		Transform the given data into a bag of words representation with OneHotEncoder.
 		Args:
 			data: list of N strings
-			output_file: path to save the bow array
 			batch_size: int, size of each batch for processing
 		Return:
-			bow: (N, D) numpy array
+			bow: (N, D) sparse matrix
 		'''	
+		batch_bow = []
 		for i in range(0, len(data), batch_size):
 			batch = data[i:i + batch_size]
 			string_list = self.split_text(batch) # separate the strings into lists of words
-			batch_bow = []
 
 			for word_list in string_list:
 				try: # check for empty strings
 					one_bow = self.onehot(word_list).sum(axis=0) # transform into bag of words
-				except: one_bow = np.zeros(self.vocab_size) # append array of zeros if empty
-				batch_bow.append(one_bow)
-
-			print(f'Batch completed for items {i} through {i + batch_size}')
+				except: one_bow = np.zeros(self.vocab_size) # array of zeros if empty string
+				batch_bow.append(csr_matrix(one_bow))
 		
-		bow = np.array(batch_bow)
+		bow = vstack(batch_bow)
+		return bow
+	
+	# process data in batches using CountVectorizer
+	def cv_bow_transform(self, data, fit=False, batch_size=10):
+		'''
+		Transform the given data into a bag of words representation using CountVectorizer.
+		Args:
+			data: list of N strings
+			fit: boolean, whether to fit the CountVectorizer instance to the data
+			batch_size: int, size of each batch for processing
+		Return:
+			bow: (N, D) sparse matrix
+		'''		
+		# If fitting is required, fit on all data first to establish vocabulary
+		if fit:
+			self.cv.fit(data)
+		
+		batch_bow = []
+		for i in range(0, len(data), batch_size):
+			batch = data[i:i + batch_size]
+			cv_bow = self.cv.transform(batch)  # transform into bag of words
+			batch_bow.append(cv_bow)
+		
+		bow = vstack(batch_bow)
 		return bow
