@@ -17,7 +17,7 @@ df_data_cb = pd.read_csv('./data/clickbait_data.csv')
 df_data_wos = pd.read_csv('./data/web_of_science_data.csv')
 
 # Preview the Clickbait data
-print(f'\nNumber of headlines in Clickbait dataset: {len(df_data_cb)}')
+print(f'\nNumber of Clickbait headlines: {len(df_data_cb)}')
 x = 42
 print('Source preview:')
 print(df_data_cb[x:x+5])
@@ -59,63 +59,22 @@ print(f'\nWeb of Science training article count: {len(x_train_wos)}')
 print(f'Web of Science test article count: {len(x_test_wos)}')
 
 # Clean the Clickbait headlines
-start_time = time.time() # track compute time
 from preprocess import Preprocess
 cleaned_train_cb = Preprocess().clean_dataset(x_train_cb)
 cleaned_test_cb = Preprocess().clean_dataset(x_test_cb)
-compute_time = time.time() - start_time
-print(f"\nTime to clean Clickbait dataset: {compute_time:.2f} seconds")
 
 # Clean the Web of Science articles
-start_time = time.time() # track compute time
 from preprocess import clean_wos
 cleaned_train_wos, cleaned_test_wos = clean_wos(x_train_wos, x_test_wos)
-compute_time = time.time() - start_time
-print(f"Time to clean Web of Science dataset: {compute_time:.2f} seconds\n")
 
-# compare compute time and output shapes using OneHotEncoder
-from bagofwords import OHE_BOW
-ohe_bow = OHE_BOW()
+# Convert cleaned text to a Bag of Words representation
+from bow_onehot_encoder import bow_encode_with_onehot
+from bow_cv_encoder import bow_encode_with_cv
 
-# Convert the Clickbait cleaned text to a Bag of Words representation
-start_time = time.time() # track compute time
-ohe_bow.fit(cleaned_train_cb)
-cb_train_ohe_bow = ohe_bow.bow_transform(cleaned_train_cb)
-cb_test_ohe_bow = ohe_bow.bow_transform(cleaned_test_cb)
-compute_time = time.time() - start_time
+# Convert using OneHotEncoder
+bow_encode_with_onehot(cleaned_train_cb, cleaned_test_cb, 'cb_train_ohe_bow.pkl', 'cb_test_ohe_bow.pkl')
+bow_encode_with_onehot(cleaned_train_wos, cleaned_test_wos, 'wos_train_ohe_bow.pkl', 'wos_test_ohe_bow.pkl')
 
-print('Clickbait(train) OneHotEncoder Bag of Words representation shape:', cb_train_ohe_bow.shape)
-print('Clickbait(test) OneHotEncoder Bag of Words representation shape:', cb_test_ohe_bow.shape)
-print(f"Time to encode cleaned Clickbait dataset: {compute_time:.2f} seconds\n")
-
-# Convert the Web of Science cleaned text to a Bag of Words representation
-start_time = time.time() # track compute time
-ohe_bow.fit(cleaned_train_wos)
-wos_train_ohe_bow = ohe_bow.bow_transform(cleaned_train_wos)
-wos_test_ohe_bow = ohe_bow.bow_transform(cleaned_test_wos)
-compute_time = time.time() - start_time
-
-print('Web of Science(train) OneHotEncoder Bag of Words representation shape:', wos_train_ohe_bow.shape)
-print('Web of Science(test) OneHotEncoder Bag of Words representation shape:', wos_test_ohe_bow.shape)
-print(f"Time to encode cleaned Web of Science dataset: {compute_time:.2f} seconds\n")
-
-# compare compute time and output shapes using CountVectorizer
-# Convert the Clickbait cleaned text to a Bag of Words representation
-start_time = time.time() # track compute time
-cb_train_cv_bow = ohe_bow.cv_bow_transform(cleaned_train_cb, fit=True)
-cb_test_cv_bow = ohe_bow.cv_bow_transform(cleaned_test_cb, fit=False)
-compute_time = time.time() - start_time
-
-print('Clickbait(train) CountVectorizer Bag of Words representation shape:', cb_train_cv_bow.shape)
-print('Clickbait(test) CountVectorizer Bag of Words representation shape:', cb_test_cv_bow.shape)
-print(f"Time to encode Clickbait data using CountVectorizer: {compute_time:.2f} seconds\n")
-
-# Convert the Web of Science cleaned text to a Bag of Words representation
-start_time = time.time() # track compute time
-wos_train_cv_bow = ohe_bow.cv_bow_transform(cleaned_train_wos, fit=True)
-wos_test_cv_bow = ohe_bow.cv_bow_transform(cleaned_test_wos, fit=False)
-compute_time = time.time() - start_time
-
-print('Web of Science(train) CountVectorizer Bag of Words representation shape:', wos_train_cv_bow.shape)
-print('Web of Science(test) CountVectorizer Bag of Words representation shape:', wos_test_cv_bow.shape)
-print(f"Time to encode Web of Science data using CountVectorizer: {compute_time:.2f} seconds\n")
+# Convert using CountVectorizer
+bow_encode_with_cv(cleaned_train_cb, cleaned_test_cb, 'cb_train_cv_bow.pkl', 'cb_test_cv_bow.pkl')
+bow_encode_with_cv(cleaned_train_wos, cleaned_test_wos, 'wos_train_cv_bow.pkl', 'wos_test_cv_bow.pkl')
