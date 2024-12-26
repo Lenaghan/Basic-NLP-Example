@@ -56,7 +56,7 @@ x_test_wos, y_test_wos = list(df_test_wos['Abstract']), list(df_test_wos['Domain
 print(f'\nClickbait dataset training headline count: {len(x_train_cb)}')
 print(f'Clickbait dataset test headline count: {len(x_test_cb)}')
 print(f'\nWeb of Science training article count: {len(x_train_wos)}')
-print(f'Web of Science test article count: {len(x_test_wos)}')
+print(f'Web of Science test article count: {len(x_test_wos)}\n')
 
 # Clean the Clickbait headlines
 from preprocess import Preprocess
