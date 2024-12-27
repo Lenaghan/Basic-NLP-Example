@@ -1,14 +1,15 @@
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from scipy.sparse import vstack, csr_matrix
 
 class OHE_BOW(object): 
 	def __init__(self):
-		# initialize instance of OneHotEncoder in self.oh for use in fit and transform
+		# initialize instances of encoders/vectorizers for use in fit and transform
 		self.vocab_size = None
 		self.oh = OneHotEncoder()
 		self.cv = CountVectorizer()
+		self.tv = TfidfVectorizer()
 
 	def split_text(self, data):
 		'''
@@ -103,6 +104,29 @@ class OHE_BOW(object):
 			batch = data[i:i + batch_size]
 			cv_bow = self.cv.transform(batch)  # transform into bag of words
 			batch_bow.append(cv_bow)
+		
+		bow = vstack(batch_bow)
+		return bow
+	
+	def tfidf_weights_transform(self, data, fit=False, batch_size=10):
+		'''
+		Transform the given data into a TF-IDF representation using TfidfVectorizer.
+		Args:
+			data: list of N strings
+			fit: boolean, whether to fit the TfidfVectorizer instance to the data
+			batch_size: int, size of each batch for processing
+		Return:
+			bow: (N, D) sparse matrix with TF-IDF weights
+		'''        
+		# If fitting is required, fit on all data first to establish vocabulary
+		if fit:
+			self.tv.fit(data)
+		
+		batch_bow = []
+		for i in range(0, len(data), batch_size):
+			batch = data[i:i + batch_size]
+			tfidf_bow = self.tv.transform(batch)  # transform into TF-IDF weighted features
+			batch_bow.append(tfidf_bow)
 		
 		bow = vstack(batch_bow)
 		return bow

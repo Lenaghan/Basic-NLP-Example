@@ -72,9 +72,14 @@ from bow_onehot_encoder import bow_encode_with_onehot
 from bow_cv_encoder import bow_encode_with_cv
 
 # Convert using OneHotEncoder
-bow_encode_with_onehot(cleaned_train_cb, cleaned_test_cb, 'cb_train_ohe_bow.pkl', 'cb_test_ohe_bow.pkl')
-bow_encode_with_onehot(cleaned_train_wos, cleaned_test_wos, 'wos_train_ohe_bow.pkl', 'wos_test_ohe_bow.pkl')
+# bow_encode_with_onehot(cleaned_train_cb, cleaned_test_cb, 'cb_train_ohe_bow.pkl', 'cb_test_ohe_bow.pkl')
+# bow_encode_with_onehot(cleaned_train_wos, cleaned_test_wos, 'wos_train_ohe_bow.pkl', 'wos_test_ohe_bow.pkl')
 
 # Convert using CountVectorizer
-bow_encode_with_cv(cleaned_train_cb, cleaned_test_cb, 'cb_train_cv_bow.pkl', 'cb_test_cv_bow.pkl')
-bow_encode_with_cv(cleaned_train_wos, cleaned_test_wos, 'wos_train_cv_bow.pkl', 'wos_test_cv_bow.pkl')
+# bow_encode_with_cv(cleaned_train_cb, cleaned_test_cb, 'cb_train_cv_bow.pkl', 'cb_test_cv_bow.pkl')
+# bow_encode_with_cv(cleaned_train_wos, cleaned_test_wos, 'wos_train_cv_bow.pkl', 'wos_test_cv_bow.pkl')
+
+# Convert to TF-IDF weighted features
+from tf_idf_transformer import fit_and_transform
+fit_and_transform(cleaned_train_cb, cleaned_test_cb, 'cb_train_tfidf.pkl', 'cb_test_tfidf.pkl')
+fit_and_transform(cleaned_train_wos, cleaned_test_wos, 'wos_train_tfidf.pkl', 'wos_test_tfidf.pkl')

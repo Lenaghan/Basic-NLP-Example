@@ -1,26 +1,33 @@
 Number of headlines in Clickbait dataset: 31845
-Clickbait dataset training headline count: 25476
-Clickbait dataset test headline count: 6369
+Clickbait training headline count: 25476
+Clickbait test headline count: 6369
 Time to clean Clickbait dataset: 15.19 seconds
 
-Clickbait(train) OneHotEncoder Bag of Words representation shape: (25476, 20536)
-Clickbait(test) OneHotEncoder Bag of Words representation shape: (6369, 20536)
+OneHotEncoder Bag of Words representation shape (train): (25476, 20536)
+OneHotEncoder Bag of Words representation shape (test): (6369, 20536)
 Time to encode cleaned Clickbait dataset: 1620.53 seconds (~0.5 hrs)
 
-Clickbait(train) CountVectorizer Bag of Words representation shape: (25476, 20517)
-Clickbait(test) CountVectorizer Bag of Words representation shape: (6369, 20517)
+CountVectorizer Bag of Words representation shape (train): (25476, 20517)
+CountVectorizer Bag of Words representation shape (test): (6369, 20517)
 Time to encode Clickbait data using CountVectorizer: 0.64 seconds
+
+TF-IDF representation shape (train): (25476, 20517)
+TF-IDF representation shape (test): (6369, 20517)
+Time to encode dataset: 2.77 seconds
 ----------------------------------------------------------------------------------------
 Number of Web of Science Articles: 46985
 Web of Science training article count: 37588
 Web of Science test article count: 9397
 Time to clean Web of Science dataset: 53.81 seconds
 
-Web of Science(train) OneHotEncoder Bag of Words representation shape: (37588, 97205)
-Web of Science(test) OneHotEncoder Bag of Words representation shape: (9397, 97205)
+OneHotEncoder Bag of Words representation shape (train): (37588, 97205)
+OneHotEncoder Bag of Words representation shape (test): (9397, 97205)
 Time to encode cleaned Web of Science dataset: 12996.57 seconds (~3.5 hrs)
 
-Web of Science(train) CountVectorizer Bag of Words representation shape: (37588, 97186)
-Web of Science(test) CountVectorizer Bag of Words representation shape: (9397, 97186)
+CountVectorizer Bag of Words representation shape (train): (37588, 97186)
+CountVectorizer Bag of Words representation shape (test): (9397, 97186)
 Time to encode Web of Science data using CountVectorizer: 7.73 seconds
 
+TF-IDF representation shape (train): (37588, 97186)
+TF-IDF representation shape (test): (9397, 97186)
+Time to encode dataset: 13.99 seconds
